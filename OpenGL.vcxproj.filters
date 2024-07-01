@@ -1,0 +1,221 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\mygl">
+      <UniqueIdentifier>{65825ebe-09af-49ee-ae65-9334bbe52c75}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src">
+      <UniqueIdentifier>{485687e8-0792-437f-bea9-035b9be36d6a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\shaders">
+      <UniqueIdentifier>{3bd54dc6-f409-4f18-8377-8152d2203769}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\hpp">
+      <UniqueIdentifier>{86d7fa4d-6efd-4b20-81f2-0d45dd60391a}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Libraries\include\miniaudio.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\stb_image.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\player.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\menu_scene.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\map.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\instructions_scene.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\game_scene.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\enemy.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\credits_scene.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\breadth.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toolbox.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\texture.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\radio.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\clock.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\context.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\icamera.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\iscene.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\mesh.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\model.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\button.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\camera_3D.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\camera_ortho.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\sound.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\transform.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\mygl\shape.hpp">
+      <Filter>Header Files\hpp</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\mygl\shape.cpp">
+      <Filter>Source Files\mygl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mygl\glad.c">
+      <Filter>Source Files\mygl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mygl\model.cpp">
+      <Filter>Source Files\mygl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\game_scene.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\credits_scene.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\toolbox.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\texture.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\menu_scene.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\instructions_scene.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shaders\diffuse_map.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\diffuse_map.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\diffuse_map_direction.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\diffuse_map_point.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\floor.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\floor_spotlight.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\framebuffer.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\framebuffer.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\framebuffer_screen.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\framebuffer_screen.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\light.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\light.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\map_spotlight.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\model_loading.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\model_loading.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\multiple_light.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\shader3D.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\texture_light.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\texture_light.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\texture_shader.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\basic_light.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\basic_light.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\basic_light2.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\bg_texture.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\bg_texture.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\button.fs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+    <None Include="shaders\button.vs">
+      <Filter>Resource Files\shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
