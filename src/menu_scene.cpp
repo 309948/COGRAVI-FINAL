@@ -26,6 +26,9 @@ MenuScene::MenuScene(Context &ctx) : ctx(ctx)
     load_texture("./assets/textures/credits_button.png", credit_btn.texture); // Textura del botón de créditos.
     load_texture("./assets/textures/quit_button.png", quit_btn.texture); // Textura del botón de salir.
 
+    bg.transform.scale.x = ctx.win_width;
+    bg.transform.scale.y = ctx.win_height;
+
     // Inicialización de los shaders para los botones y el fondo.
     btn_shader = Shader("button.vs", "button.fs"); // Shader para los botones.
     bg_shader = Shader("bg_texture.vs", "bg_texture.fs"); // Shader para el fondo.
@@ -40,6 +43,7 @@ void MenuScene::store_scene_in_ctx() { ctx.scenes.push_back(this); }
 // Prepara la escena para ser mostrada, habilitando el modo de cursor normal y deshabilitando el test de profundidad.
 void MenuScene::open_scene()
 {
+    start_time = clock.current_time; // Inicializa el tiempo de inicio de la escena.
     glDisable(GL_DEPTH_TEST); // Desactiva el test de profundidad para el renderizado 2D.
     glfwSetInputMode(ctx.window, GLFW_CURSOR, GLFW_CURSOR_NORMAL); // Establece el cursor como visible.
 }
