@@ -1,26 +1,30 @@
 #include "game_scene.hpp"
 #include "toolbox.hpp"
 
-GameScene::GameScene(Context &ctx) : ctx(ctx)
+// Constructor de la escena del juego, inicializa componentes y carga recursos.
+GameScene::GameScene(Context& ctx) : ctx(ctx)
 {
-    store_scene_in_ctx();
+    store_scene_in_ctx(); // Almacena la escena actual en el contexto global.
 
-    map.load_map();
+    map.load_map(); // Carga el mapa del juego.
+    // Inicializa shaders para diferentes elementos de la escena.
     map_shader = Shader("basic_light.vs", "map_spotlight.fs");
     floor_shader = Shader("floor.vs", "floor_spotlight.fs");
 
     shader = Shader("framebuffer.vs", "framebuffer.fs");
     screen_shader = Shader("framebuffer_screen.vs", "framebuffer_screen.fs");
 
+    // Crea objetos jugador y enemigo.
     player = new Player(map, ctx.sound_manager, ctx.win_width, ctx.win_height);
     enemy = new Enemy(map, ctx.sound_manager);
 
+    // Carga sonidos de ambiente y de eventos específicos.
     ma_sound_init_from_file(&ctx.sound_manager.engine, "./assets/sfx/screamer.wav", MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_ASYNC, NULL, &ctx.sound_manager.fence, &scream_sound);
-    ma_sound_init_from_file(&ctx.sound_manager.engine, "./assets/sfx/ambiance.wav", MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_ASYNC, NULL, &ctx.sound_manager.fence, &ambiance_sound);    
+    ma_sound_init_from_file(&ctx.sound_manager.engine, "./assets/sfx/ambiance.wav", MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_ASYNC, NULL, &ctx.sound_manager.fence, &ambiance_sound);
+    // Carga la textura de la linterna.
     load_texture("./assets/textures/flashlight.png", cookie_mask_id);
 
-    // framebuffer configuration
-    // -------------------------
+    // Configuración del framebuffer para efectos de post-procesamiento.
     glGenVertexArrays(1, &quad_vao);
     glGenBuffers(1, &quad_vbo);
     glBindVertexArray(quad_vao);
@@ -32,13 +36,13 @@ GameScene::GameScene(Context &ctx) : ctx(ctx)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 4 * sizeof(float), (void*)(2 * sizeof(float)));
 }
 
-void GameScene::store_scene_in_ctx()
-{
-    ctx.scenes.push_back(this);
-}
+// Almacena la referencia de esta escena en el contexto global.
+void GameScene::store_scene_in_ctx(){ ctx.scenes.push_back(this); }
 
+// Inicializa el framebuffer para efectos de post-procesamiento.
 void GameScene::init_framebuffer()
 {
+    // Configuración inicial del framebuffer y texturas asociadas.
     shader.use();
     shader.set_int("texture1", 0);
 
@@ -57,16 +61,18 @@ void GameScene::init_framebuffer()
     
     glGenRenderbuffers(1, &rbo);
     glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, ctx.win_width, ctx.win_height); // use a single renderbuffer object for both a depth AND stencil buffer.
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo); // now actually attach it
-    // now that we actually created the framebuffer and added all attachments we want to check if it is actually complete now
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, ctx.win_width, ctx.win_height);
+    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
     if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
         cout << "ERROR::FRAMEBUFFER:: Framebuffer is not complete!" << endl;
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+// Prepara la escena para ser mostrada, inicializando componentes necesarios.
 void GameScene::open_scene()
 {
+    // Configuraciones iniciales al abrir la escena, como habilitar el test de profundidad.
+
     glEnable(GL_DEPTH_TEST);
     glfwSetInputMode(ctx.window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -80,15 +86,19 @@ void GameScene::open_scene()
     ma_sound_set_looping(&ambiance_sound, true);
 }
 
+// Limpieza y acciones a realizar al cerrar la escena.
 void GameScene::close_scene() 
 {
+    // Detiene el motor de sonido y realiza limpieza.
     ma_engine_stop(&ctx.sound_manager.engine);
-    // player->~Player();
     return;
 }
 
+// Configura los shaders con parámetros específicos de la escena.
 void GameScene::shader_config()
 {
+    // Configura los shaders para el renderizado, incluyendo propiedades de luz y material.
+
     map_shader.use();
 
     map_shader.set_float("time", clock.current_time);
@@ -116,8 +126,12 @@ void GameScene::shader_config()
     }
 
     map_shader.set_float("light.constant", 1.0f);
+    /*
     map_shader.set_float("light.linear", 0.22f);
     map_shader.set_float("light.quadratic", 0.20f);
+    */
+    map_shader.set_float("light.linear", 0.09f); // Valor original: 0.22f
+    map_shader.set_float("light.quadratic", 0.032f); // Valor original: 0.20f
 
     //material properties
     map_shader.set_float("material.shininess", 32.0f);
@@ -131,8 +145,12 @@ void GameScene::shader_config()
     floor_shader.use();
     floor_shader.set_vec3("light.position", player->player_camera.position);
     floor_shader.set_vec3("light.direction", player->player_camera.front);
+    /*
     floor_shader.set_float("light.cutOff",   glm::cos(glm::radians(10.0f)));
     floor_shader.set_float("light.outerCutOff", glm::cos(glm::radians(12.0f)));
+    */
+    map_shader.set_float("light.cutOff", glm::cos(glm::radians(15.0f))); // Valor original: glm::cos(glm::radians(10.0f))
+    map_shader.set_float("light.outerCutOff", glm::cos(glm::radians(17.5f))); // Valor original: glm::cos(glm::radians(12.0f))
 
     floor_shader.set_vec3("viewPos", player->player_camera.position);
 
@@ -166,8 +184,11 @@ void GameScene::shader_config()
     glBindTexture(GL_TEXTURE_2D, cookie_mask_id);
 }
 
+// Actualiza el estado de la escena en cada frame.
 void GameScene::update()
 {
+    // Lógica de actualización de la escena, incluyendo renderizado a framebuffer y efectos.
+
     clock.update();
     player->update();
     enemy->update();
@@ -187,11 +208,9 @@ void GameScene::update()
     map.render(map_shader, floor_shader, player->player_camera);
     enemy->render(map_shader, player->player_camera);
 
-    // now bind back to default framebuffer and draw a quad plane with the attached framebuffer color texture
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glDisable(GL_DEPTH_TEST); // disable depth test so screen-space quad isn't discarded due to depth test.
-    // clear all relevant buffers
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f); // set clear color to white (not really necessary actually, since we won't be able to see behind the quad anyways)
+    glDisable(GL_DEPTH_TEST);
+    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT);
 
     screen_shader.use();
@@ -215,14 +234,16 @@ void GameScene::update()
     }
 
     glBindVertexArray(quad_vao);
-    glBindTexture(GL_TEXTURE_2D, textureColorbuffer);	// use the color attachment texture as the texture of the quad plane
+    glBindTexture(GL_TEXTURE_2D, textureColorbuffer);
     glDrawArrays(GL_TRIANGLES, 0, 6);
 
     end_condition();
 }
 
+// Verifica condiciones de fin de juego y realiza acciones correspondientes.
 void GameScene::end_condition()
 {
+    // Verifica condiciones de victoria o derrota y actúa en consecuencia.
     if (player->victory)
     {
         ctx.load_scene_id(0);
@@ -246,8 +267,11 @@ void GameScene::end_condition()
     }
 }
 
+// Función para activar un evento de susto en el juego.
 void GameScene::screamer()
 {
+    // Activa un sonido fuerte y efectos visuales para asustar al jugador.
+
     if (call_screamer == false)
     {
         call_screamer = true;
@@ -258,14 +282,20 @@ void GameScene::screamer()
     }
 }
 
+// Limpia la escena antes de renderizar.
 void GameScene::scene_clear()
 {
+    // Limpia los buffers para preparar el nuevo frame.
+
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+// Procesa la entrada del usuario desde el teclado.
 void GameScene::process_input()
 {
+    // Gestiona las entradas del teclado para controlar al jugador.
+
     bool k_pressed = false;
 
     if (glfwGetKey(ctx.window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
@@ -296,8 +326,11 @@ void GameScene::process_input()
     player->update_velocity(k_pressed);
 }
 
+// Callback para manejar el movimiento del mouse.
 void GameScene::mouse_callback(GLFWwindow* window, double xposIn, double yposIn) 
 {
+    // Actualiza la cámara del jugador basado en el movimiento del mouse.
+
     if (call_screamer)
         return;
 
@@ -312,7 +345,7 @@ void GameScene::mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     }
 
     float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // reversed since y-coordinates go from bottom to top
+    float yoffset = lastY - ypos;
 
     lastX = xpos;
     lastY = ypos;
@@ -320,8 +353,11 @@ void GameScene::mouse_callback(GLFWwindow* window, double xposIn, double yposIn)
     player->player_camera.process_mouse_movement(xoffset, yoffset);
 }
 
+// Callback para manejar clics del mouse.
 void GameScene::left_click_callback(GLFWwindow* window, int button, int action, int mods)
 {
+    // Gestiona los clics del mouse para interactuar con elementos del juego.
+
     if (call_screamer)
         return;
 
@@ -342,13 +378,18 @@ void GameScene::left_click_callback(GLFWwindow* window, int button, int action, 
     }
 }
 
+// Callback para manejar el scroll del mouse.
 void GameScene::scroll_callback(GLFWwindow* window, double xoffset, double yoffset) 
 {
+    // Permite al jugador hacer zoom in/out con el scroll del mouse.
     player->player_camera.process_mouse_scroll(static_cast<float>(yoffset));
 }
 
+// Callback para ajustar el tamaño del framebuffer cuando la ventana cambia de tamaño.
 void GameScene::framebuffer_size_callback(GLFWwindow* window, int width, int height)
 {
+    // Ajusta el viewport y reinicializa el framebuffer al cambiar el tamaño de la ventana.
+
     glViewport(0, 0, width, height);
     player->player_camera.width = width;
     player->player_camera.height = height;

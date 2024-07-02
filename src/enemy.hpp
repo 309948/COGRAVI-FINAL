@@ -1,14 +1,15 @@
 #pragma once
 
-#include "mygl/model.hpp"
-#include "mygl/clock.hpp"
-#include "map.hpp"
-#include "breadth.hpp"
-#include "toolbox.hpp"
+#include "mygl/model.hpp" // Incluye la definición de la clase Model para manejar modelos 3D.
+#include "mygl/clock.hpp" // Incluye la definición de la clase Clock para manejar el tiempo.
+#include "map.hpp" // Incluye la definición de la clase Map para interactuar con el mapa del juego.
+#include "breadth.hpp" // Incluye la función de búsqueda en anchura para calcular rutas.
+#include "toolbox.hpp" // Herramientas útiles para operaciones matemáticas o de sonido.
 
 class Enemy 
 {
-    enum Enemy_Movement  {
+    // Enumeración para representar las posibles direcciones de movimiento del enemigo.
+    enum Enemy_Movement {
         FORWARD,
         BACKWARD,
         LEFT,
@@ -16,12 +17,16 @@ class Enemy
     };
 
     public:
-        bool scream = false;
-        bool see_player = false;
-        bool near_player = false;
+        // Variables booleanas para controlar el estado del enemigo.
+        bool scream = false; // Si el enemigo está gritando.
+        bool see_player = false; // Si el enemigo ve al jugador.
+        bool near_player = false; // Si el enemigo está cerca del jugador.
 
+        // Constructor de la clase Enemy. Inicializa el modelo 3D del enemigo y carga el sonido asociado.
         Enemy(Map &map, Sound &sm) : map(map)
         {
+            // Carga y configuración inicial del modelo 3D y el sonido.
+
             stbi_set_flip_vertically_on_load(false);
             ma_sound_init_from_file(&sm.engine, sf, MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_ASYNC, NULL, &sm.fence, &noise);
             model = Model("./assets/models/enemy/monster.obj");
@@ -33,13 +38,14 @@ class Enemy
             path_pos = tile_pos(model.transform.position);
         }
 
-        void render(Shader shader, Camera3D &camera)
-        {
-            model.draw(shader, camera);
-        }
+        // Función para renderizar el modelo 3D del enemigo.
+        void render(Shader shader, Camera3D &camera){ model.draw(shader, camera); }
 
+        // Función para inicializar o reiniciar el estado del enemigo.
         void init()
         {
+            // Configuración inicial del enemigo, incluyendo posición, velocidad, y ruta de movimiento.
+            
             clock.reset();
             front = glm::vec3(0.0f, 0.0f, 1.0f);
             model.transform.position = map.enemy_start_position;
@@ -61,8 +67,11 @@ class Enemy
             ma_sound_set_looping(&noise, true);
         }
 
+        // Función para actualizar el estado y la posición del enemigo cada frame.
         void update()
         {
+            // Actualiza la posición del enemigo, detecta al jugador, y ajusta el movimiento basado en la ruta calculada.
+
             clock.update();
             update_sound_position();
 
@@ -92,8 +101,11 @@ class Enemy
             detect_player();
         }
 
+        // Función para manejar el comportamiento del enemigo cuando está gritando.
         void screamer(Player &player)
         {
+            // Configura la posición y orientación del enemigo para enfrentar al jugador y aumenta la velocidad de movimiento.
+
             player.torchlight_on = true;
             model.transform.position = player.player_camera.position + player.player_camera.front * 3.0f;
             model.transform.position.y -= 0.2f;
@@ -109,15 +121,18 @@ class Enemy
             scream = true;
         }
 
+        // Función para calcular la posición en el mapa basada en la posición en el mundo 3D.
         glm::ivec2 tile_pos(glm::vec3 pos)
         {
+            // Conversión de coordenadas del mundo 3D a coordenadas del mapa 2D.
             return {int(std::round(pos.z / 1)) * 1, int(std::round(pos.x / 1)) * 1};
-            //3D WORLD X = Y 2D WORLD
-            //3D WORLD Z = X 2D WORLD
         }
 
+        // Función para detectar la presencia del jugador cerca del enemigo.
         void detect_player()
         {
+            // Utiliza la búsqueda en anchura para determinar si el jugador está cerca y/o visible para el enemigo.
+
             glm::ivec2 tp = tile_pos(map.player_position);
             glm::ivec2 tpe = tile_pos(map.enemy_position);
 
@@ -145,23 +160,26 @@ class Enemy
         }
 
     private:
-        Clock clock;
-        Map &map;
-        Model model;
-        ma_sound noise;
-        const char *sf = "./assets/sfx/enemy_noise.wav";
+        // Miembros privados de la clase, incluyendo el modelo 3D, el sonido, la velocidad de movimiento, y la ruta de movimiento.
+        Clock clock; // Reloj para manejar el tiempo.
+        Map& map; // Referencia al mapa del juego.
+        Model model; // Modelo 3D del enemigo.
+        ma_sound noise; // Sonido asociado con el enemigo.
+        const char* sf = "./assets/sfx/enemy_noise.wav"; // Ruta al archivo de sonido.
 
-        glm::vec3 front = glm::vec3(0.0f, 0.0f, 1.0f);
-        glm::vec3 right = glm::vec3(-1.0f, 0.0f, 0.0f);
+        glm::vec3 front = glm::vec3(0.0f, 0.0f, 1.0f); // Dirección frontal del enemigo.
+        glm::vec3 right = glm::vec3(-1.0f, 0.0f, 0.0f); // Dirección derecha del enemigo.
 
-        std::vector<glm::ivec2> path;
-        glm::ivec2 path_pos;
-        
-        float movement_speed = 0.3f;
-        float velocity;
+        std::vector<glm::ivec2> path; // Ruta de movimiento calculada.
+        glm::ivec2 path_pos; // Posición actual en el mapa.
 
-        int it = 0;
-        bool choose_direction = false;
+        float movement_speed = 0.3f; // Velocidad de movimiento del enemigo.
+        float velocity; // Velocidad calculada basada en el tiempo.
+
+        int it = 0; // Índice para iterar a través de la ruta de movimiento.
+        bool choose_direction = false; // Indica si se debe elegir una nueva dirección de movimiento.
+
+        // Funciones privadas para manejar el movimiento y la orientación del enemigo.
 
         void move_forward()
         {
@@ -254,9 +272,7 @@ class Enemy
             float clamped_distance = clamp(distance, min_distance, max_distance);
             float normalized_distance = map_range(clamped_distance, min_distance, max_distance, 0.0f, 1.0f);
 
-            // map_range()
-
-            float volume = map_range(normalized_distance, 1.0f, 0.0f, 0.0f, 12.0f); //10.0f - glm::clamp((distance - minDistance) / (maxDistance - minDistance), 0.0f, 10.0f);
+            float volume = map_range(normalized_distance, 1.0f, 0.0f, 0.0f, 12.0f);
             ma_sound_set_volume(&noise, volume);
         }
 };

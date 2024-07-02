@@ -11,22 +11,25 @@
 
 class Map {
     public:
-        std::vector<std::vector<char>> txt_map;
-        std::vector<glm::vec3> walls_position;
-        glm::vec3 player_position = {0.0f, 0.5f, 0.0f};
-        glm::vec3 player_start_position = {0.0f, 0.5f, 0.0f};
-        glm::vec3 win_position;
-        glm::vec3 statue_position;
+        // Almacena la representación del mapa en texto y las posiciones de elementos clave.
+        std::vector<std::vector<char>> txt_map; // Representación del mapa como una matriz de caracteres.
+        std::vector<glm::vec3> walls_position; // Posiciones de las paredes en el mapa.
+        glm::vec3 player_position = { 0.0f, 0.5f, 0.0f }; // Posición actual del jugador.
+        glm::vec3 player_start_position = { 0.0f, 0.5f, 0.0f }; // Posición inicial del jugador.
+        glm::vec3 win_position; // Posición de la meta.
+        glm::vec3 statue_position; // Posiciones de estatuas y enemigos.
         glm::vec3 statue2_position;
         glm::vec3 statue3_position;
         glm::vec3 statue4_position;
         glm::vec3 enemy_position;
         glm::vec3 enemy_start_position;
 
+        // Constructor: carga el mapa y las texturas.
         Map()
         {
-            read_map_file("./assets/final_map.txt");
-            stbi_set_flip_vertically_on_load(false);
+            read_map_file("./assets/final_map.txt"); // Lee el archivo de mapa.
+            stbi_set_flip_vertically_on_load(false); // Configura la carga de texturas.
+            // Carga modelos 3D para elementos del mapa.
             statue = Model("./assets/models/statue/untitled2.obj");
             statue2 = Model("./assets/models/statue2/untitled.obj");
             statue3 = Model("./assets/models/statue3/untitled.obj");
@@ -36,9 +39,12 @@ class Map {
             wall = Model("./assets/models/wall/wall.obj");
             cage = Model("./assets/models/cage/Cage.obj");
         }
-        
+
+        // Renderiza el mapa y sus elementos.
         void render(Shader shader, Shader shader2, const ICamera &camera)
         {
+            // Renderiza las paredes, la jaula, las estatuas, el suelo y el techo.
+            // También ajusta la rotación de las estatuas para que miren hacia el jugador.
             for (auto &pos : walls_position)
             {
                 wall.transform.position = pos;
@@ -74,8 +80,10 @@ class Map {
             statue4.transform.rotation.y = angle4;
         }
 
+        // Carga el mapa desde el archivo de texto y configura las posiciones iniciales de los elementos.
         void load_map() 
         {
+            // Configura las posiciones iniciales de paredes, estatuas, enemigos, etc; basándose en el archivo de mapa.
             glm::vec3 position = {0.0f, 0.0f, 0.0f};
             floor.add_texture("./assets/textures/seamless_soil.jpg", floor.diffuse_texture);
             floor.transform.scale.x *= txt_map[0].size();
@@ -142,6 +150,7 @@ class Map {
             statue4.transform.scale *= 0.5f;
         }
 
+        // Imprime la representación en texto del mapa en la consola.
         void print_map_txt()
         {
             for (int i = 0; i < txt_map.size(); i++)
@@ -154,6 +163,7 @@ class Map {
             }
         }
 
+        // Devuelve una posición aleatoria transitable en el mapa.
         glm::ivec2 random_walkable_pos()
         {
             srand (time(NULL));
@@ -169,6 +179,7 @@ class Map {
         }
 
     private:
+        // Modelos 3D para los elementos del mapa.
         Model cage;
         Model wall;
         Model statue;
@@ -177,11 +188,12 @@ class Map {
         Model statue4;
         Model brother;
 
-        Cube floor;
-        glm::vec3 floor_position;
-        glm::vec3 roof_position;
-        Shader floor_shader;
+        Cube floor; // Representa el suelo y el techo.
+        glm::vec3 floor_position; // Posición del suelo.
+        glm::vec3 roof_position; // Posición del techo.
+        Shader floor_shader; // Shader para el suelo y el techo.
   
+        // Lee el archivo de mapa y lo almacena en txt_map.
         void read_map_file(const char *path)
         {
             std::string line;
