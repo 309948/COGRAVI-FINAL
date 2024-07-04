@@ -4,14 +4,13 @@
 
 ### Compilacion y Ejecucion
 
-Solo te faltaria ejecutar el .exe
+Solo te faltaria ejecutar el `OpenGL.exe`
 
 ![imagen](https://github.com/309948/COGRAVI-FINAL/assets/166778590/4d48e547-c949-4479-b10a-7de55d531913)
 
-o compilar el mismo proyecto desde el OpenGL.sln
+o compilar el mismo proyecto desde el `OpenGL.sln`
 
 ![imagen](https://github.com/309948/COGRAVI-FINAL/assets/166778590/06a10dec-c0f0-460d-aa72-46baecc06379)
-
 
 ### Disfruta el juego!
 
